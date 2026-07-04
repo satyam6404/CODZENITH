@@ -1,0 +1,467 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Smart TaskManager - Intelligent Task Manager Application" />
+  <title>Smart TaskManager — Organize Smarter</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@600;700;800&display=swap"
+    rel="stylesheet" />
+  <link rel="icon" type="image/svg+xml"
+    href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0%25' stop-color='%236D5EF5'/%3E%3Cstop offset='100%25' stop-color='%2312C6A5'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect x='1' y='1' width='38' height='38' rx='11' fill='url(%23g)'/%3E%3Cpath d='M22 7L12.5 21.5H18.5L17 33L27 17.5H20.5L22 7Z' fill='white'/%3E%3Ccircle cx='30' cy='30' r='8' fill='%2312C6A5' stroke='white' stroke-width='2'/%3E%3Cpath d='M26.8 30.2L29 32.4L33.2 27.8' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E" />
+</head>
+
+<body>
+  <!-- Loading Screen -->
+  <div id="loadingScreen" class="loading-screen" aria-live="polite" aria-label="Loading application">
+    <div class="loader-container">
+      <svg class="loader-logo" viewBox="0 0 40 40" width="52" height="52" aria-hidden="true">
+        <defs>
+          <linearGradient id="loaderGrad" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#8B7FFF" />
+            <stop offset="100%" stop-color="#2FE0BE" />
+          </linearGradient>
+        </defs>
+        <rect x="1" y="1" width="38" height="38" rx="11" fill="url(#loaderGrad)" />
+        <path d="M22 7L12.5 21.5H18.5L17 33L27 17.5H20.5L22 7Z" fill="#fff" />
+        <circle cx="30" cy="30" r="8" fill="#2FE0BE" stroke="#1a1d3b" stroke-width="2" />
+        <path d="M26.8 30.2L29 32.4L33.2 27.8" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"
+          stroke-linejoin="round" />
+      </svg>
+      <div class="loader-ring"></div>
+      <span class="loader-text">Smart TaskManager</span>
+    </div>
+  </div>
+
+  <!-- Toast Notification -->
+  <div id="toastContainer" class="toast-container" aria-live="polite" role="alert"></div>
+
+  <!-- Back to Top -->
+  <button id="backToTop" class="back-to-top" aria-label="Back to top" title="Back to top">
+    &#8679;
+  </button>
+
+  <!-- Navbar -->
+  <nav class="navbar" role="navigation" aria-label="Main navigation">
+    <div class="nav-left">
+      <div class="logo" aria-label="Smart TaskManager Logo">
+        <svg class="logo-mark" viewBox="0 0 40 40" width="34" height="34" aria-hidden="true">
+          <defs>
+            <linearGradient id="stmGrad" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stop-color="#6D5EF5" />
+              <stop offset="100%" stop-color="#12C6A5" />
+            </linearGradient>
+          </defs>
+          <rect x="1" y="1" width="38" height="38" rx="11" fill="url(#stmGrad)" />
+          <path d="M22 7L12.5 21.5H18.5L17 33L27 17.5H20.5L22 7Z" fill="#fff" />
+          <circle cx="30" cy="30" r="8" fill="#12C6A5" stroke="var(--card-bg-solid)" stroke-width="2" />
+          <path d="M26.8 30.2L29 32.4L33.2 27.8" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"
+            stroke-linejoin="round" />
+        </svg>
+        <span class="logo-text">Smart<b>TaskManager</b></span>
+      </div>
+    </div>
+    <div class="nav-center">
+      <div class="datetime-display">
+        <span id="liveDate" class="live-date" aria-live="polite"></span>
+        <span class="datetime-sep">|</span>
+        <span id="liveTime" class="live-time" aria-live="polite"></span>
+      </div>
+    </div>
+    <div class="nav-right">
+      <button id="themeToggle" class="theme-toggle" aria-label="Toggle dark/light theme" title="Toggle Theme">
+        <span class="theme-icon" id="themeIcon">🌙</span>
+      </button>
+      <div class="profile-menu-wrap">
+        <button class="profile-btn" aria-label="Profile menu" id="profileBtn">
+          <div class="profile-avatar">S</div>
+        </button>
+        <div class="profile-dropdown" id="profileDropdown" role="menu">
+          <div class="profile-info">
+            <div class="profile-avatar-lg">S</div>
+            <div>
+              <p class="profile-name">Smart User</p>
+              <p class="profile-role">Productivity Pro • Level 3</p>
+            </div>
+          </div>
+          <hr class="dropdown-divider" />
+          <button class="dropdown-item" onclick="exportTasks()" role="menuitem">
+            📤 Export Tasks
+          </button>
+          <button class="dropdown-item" onclick="importTasks()" role="menuitem">
+            📥 Import Tasks
+          </button>
+          <button class="dropdown-item danger" onclick="confirmClearAll()" role="menuitem">
+            🗑️ Clear All Data
+          </button>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Layout -->
+  <main class="main-layout" id="mainLayout">
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar" aria-label="Sidebar navigation">
+      <div class="sidebar-section">
+        <p class="sidebar-label">FILTERS</p>
+        <button class="sidebar-btn active" data-filter="all" aria-pressed="true">
+          <span class="sb-icon">📋</span> All Tasks
+          <span class="sb-count" id="countAll">0</span>
+        </button>
+        <button class="sidebar-btn" data-filter="pending" aria-pressed="false">
+          <span class="sb-icon">⏳</span> Pending
+          <span class="sb-count" id="countPending">0</span>
+        </button>
+        <button class="sidebar-btn" data-filter="completed" aria-pressed="false">
+          <span class="sb-icon">✅</span> Completed
+          <span class="sb-count" id="countCompleted">0</span>
+        </button>
+        <button class="sidebar-btn" data-filter="pinned" aria-pressed="false">
+          <span class="sb-icon">📌</span> Pinned
+          <span class="sb-count" id="countPinned">0</span>
+        </button>
+        <button class="sidebar-btn" data-filter="archived" aria-pressed="false">
+          <span class="sb-icon">🗃️</span> Archived
+          <span class="sb-count" id="countArchived">0</span>
+        </button>
+        <button class="sidebar-btn" data-filter="overdue" aria-pressed="false">
+          <span class="sb-icon">🔴</span> Overdue
+          <span class="sb-count" id="countOverdue">0</span>
+        </button>
+        <button class="sidebar-btn" data-filter="today" aria-pressed="false">
+          <span class="sb-icon">📅</span> Today
+          <span class="sb-count" id="countToday">0</span>
+        </button>
+      </div>
+      <div class="sidebar-section">
+        <p class="sidebar-label">PRIORITY</p>
+        <button class="sidebar-btn" data-filter="high" aria-pressed="false">
+          <span class="sb-icon">🔥</span> High
+          <span class="sb-count" id="countHigh">0</span>
+        </button>
+        <button class="sidebar-btn" data-filter="medium" aria-pressed="false">
+          <span class="sb-icon">⚡</span> Medium
+          <span class="sb-count" id="countMedium">0</span>
+        </button>
+        <button class="sidebar-btn" data-filter="low" aria-pressed="false">
+          <span class="sb-icon">🌿</span> Low
+          <span class="sb-count" id="countLow">0</span>
+        </button>
+      </div>
+      <div class="sidebar-section">
+        <p class="sidebar-label">CATEGORIES</p>
+        <button class="sidebar-btn" data-filter="cat-Personal" aria-pressed="false">
+          <span class="sb-icon">👤</span> Personal
+        </button>
+        <button class="sidebar-btn" data-filter="cat-Work" aria-pressed="false">
+          <span class="sb-icon">💼</span> Work
+        </button>
+        <button class="sidebar-btn" data-filter="cat-Study" aria-pressed="false">
+          <span class="sb-icon">📚</span> Study
+        </button>
+        <button class="sidebar-btn" data-filter="cat-Shopping" aria-pressed="false">
+          <span class="sb-icon">🛒</span> Shopping
+        </button>
+        <button class="sidebar-btn" data-filter="cat-Health" aria-pressed="false">
+          <span class="sb-icon">💊</span> Health
+        </button>
+      </div>
+      <!-- Mini Calendar -->
+      <div class="sidebar-section">
+        <p class="sidebar-label">CALENDAR</p>
+        <div class="mini-calendar" id="miniCalendar" aria-label="Mini calendar"></div>
+      </div>
+      <!-- Keyboard Shortcuts -->
+      <div class="sidebar-section shortcuts-box">
+        <p class="sidebar-label">SHORTCUTS</p>
+        <div class="shortcut-row"><kbd>N</kbd> New Task</div>
+        <div class="shortcut-row"><kbd>Esc</kbd> Close Modal</div>
+        <div class="shortcut-row"><kbd>↑↓</kbd> Navigate</div>
+        <div class="shortcut-row"><kbd>D</kbd> Dark Mode</div>
+      </div>
+    </aside>
+
+    <!-- Content Area -->
+    <section class="content-area" id="contentArea">
+      <!-- Dashboard Stats -->
+      <div class="stats-grid" id="statsGrid" aria-label="Dashboard statistics">
+        <div class="stat-card" data-tip="Total tasks across all states">
+          <div class="stat-icon">📋</div>
+          <div class="stat-info">
+            <p class="stat-label">Total Tasks</p>
+            <p class="stat-value" id="statTotal">0</p>
+          </div>
+          <div class="stat-glow"></div>
+        </div>
+        <div class="stat-card green" data-tip="Tasks marked as done">
+          <div class="stat-icon">✅</div>
+          <div class="stat-info">
+            <p class="stat-label">Completed</p>
+            <p class="stat-value" id="statCompleted">0</p>
+          </div>
+          <div class="stat-glow"></div>
+        </div>
+        <div class="stat-card yellow" data-tip="Tasks still pending">
+          <div class="stat-icon">⏳</div>
+          <div class="stat-info">
+            <p class="stat-label">Pending</p>
+            <p class="stat-value" id="statPending">0</p>
+          </div>
+          <div class="stat-glow"></div>
+        </div>
+        <div class="stat-card red" data-tip="Tasks past due date">
+          <div class="stat-icon">🔴</div>
+          <div class="stat-info">
+            <p class="stat-label">Overdue</p>
+            <p class="stat-value" id="statOverdue">0</p>
+          </div>
+          <div class="stat-glow"></div>
+        </div>
+        <div class="stat-card purple" data-tip="Pinned priority tasks">
+          <div class="stat-icon">📌</div>
+          <div class="stat-info">
+            <p class="stat-label">Pinned</p>
+            <p class="stat-value" id="statPinned">0</p>
+          </div>
+          <div class="stat-glow"></div>
+        </div>
+        <div class="stat-card grey" data-tip="Archived tasks">
+          <div class="stat-icon">🗃️</div>
+          <div class="stat-info">
+            <p class="stat-label">Archived</p>
+            <p class="stat-value" id="statArchived">0</p>
+          </div>
+          <div class="stat-glow"></div>
+        </div>
+        <!-- Circular Progress -->
+        <div class="stat-card progress-card" data-tip="Overall completion rate">
+          <div class="circular-progress-wrap">
+            <svg class="circular-progress" viewBox="0 0 80 80" aria-label="Completion percentage">
+              <circle class="cp-bg" cx="40" cy="40" r="34" />
+              <circle class="cp-fill" id="cpFill" cx="40" cy="40" r="34" stroke-dasharray="213.6"
+                stroke-dashoffset="213.6" />
+            </svg>
+            <span class="cp-text" id="cpText">0%</span>
+          </div>
+          <p class="stat-label" style="margin-top: 8px">Completion</p>
+          <div class="stat-glow"></div>
+        </div>
+        <!-- Linear Progress -->
+        <div class="stat-card progress-bar-card" data-tip="Visual task completion bar">
+          <p class="stat-label">Progress</p>
+          <div class="linear-progress-wrap">
+            <div class="linear-progress-bar">
+              <div class="linear-progress-fill" id="linearFill"></div>
+            </div>
+            <span class="linear-pct" id="linearPct">0%</span>
+          </div>
+          <p class="stat-sublabel" id="progressSubLabel">
+            0 of 0 tasks completed
+          </p>
+          <div class="stat-glow"></div>
+        </div>
+      </div>
+
+      <!-- Toolbar -->
+      <div class="toolbar" role="toolbar" aria-label="Task controls">
+        <div class="search-wrap">
+          <span class="search-icon" aria-hidden="true">🔍</span>
+          <input type="search" id="searchInput" class="search-input"
+            placeholder="Search tasks by title, description, category, priority..." aria-label="Search tasks"
+            autocomplete="off" />
+          <button class="search-clear" id="searchClear" aria-label="Clear search" style="display: none">
+            ✕
+          </button>
+        </div>
+        <div class="toolbar-right">
+          <select id="sortSelect" class="sort-select" aria-label="Sort tasks">
+            <option value="newest">⬇ Newest</option>
+            <option value="oldest">⬆ Oldest</option>
+            <option value="alpha">🔤 A–Z</option>
+            <option value="priority">🔥 Priority</option>
+            <option value="duedate">📅 Due Date</option>
+            <option value="status">✅ Status</option>
+          </select>
+          <button class="btn-primary ripple" id="addTaskBtn" aria-label="Add new task">
+            <span>＋</span> New Task
+          </button>
+        </div>
+      </div>
+
+      <!-- Active Filter Indicator -->
+      <div class="filter-indicator" id="filterIndicator" style="display: none">
+        <span id="filterLabel">Showing: All</span>
+        <button class="clear-filter-btn" id="clearFilterBtn" aria-label="Clear filter">
+          ✕ Clear
+        </button>
+      </div>
+
+      <!-- Task List -->
+      <div class="task-list" id="taskList" role="list" aria-label="Task list" aria-live="polite">
+        <!-- Tasks rendered by JS -->
+      </div>
+
+      <!-- Empty State -->
+      <div class="empty-state" id="emptyState" style="display: none" aria-live="polite">
+        <div class="empty-illustration">
+          <svg viewBox="0 0 200 180" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <rect x="40" y="30" width="120" height="140" rx="12" fill="var(--card-bg)" stroke="var(--border)"
+              stroke-width="2" />
+            <rect x="58" y="55" width="84" height="10" rx="5" fill="var(--border)" />
+            <rect x="58" y="75" width="60" height="8" rx="4" fill="var(--border)" opacity=".6" />
+            <rect x="58" y="93" width="74" height="8" rx="4" fill="var(--border)" opacity=".4" />
+            <circle cx="100" cy="145" r="18" fill="var(--accent)" opacity=".15" />
+            <text x="100" y="151" text-anchor="middle" font-size="18" fill="var(--accent)">
+              ✦
+            </text>
+          </svg>
+        </div>
+        <h3 class="empty-title" id="emptyTitle">No Tasks Yet</h3>
+        <p class="empty-desc" id="emptyDesc">
+          Click <strong>+ New Task</strong> to get started and stay organized!
+        </p>
+        <button class="btn-primary ripple" onclick="openAddModal()">
+          ＋ Add Your First Task
+        </button>
+      </div>
+    </section>
+  </main>
+
+  <!-- ========== ADD / EDIT TASK MODAL ========== -->
+  <div class="modal-overlay" id="taskModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle"
+    style="display: none">
+    <div class="modal-box" id="modalBox">
+      <div class="modal-header">
+        <h2 class="modal-title" id="modalTitle">New Task</h2>
+        <button class="modal-close" id="modalClose" aria-label="Close modal">
+          ✕
+        </button>
+      </div>
+      <div class="modal-body">
+        <form id="taskForm" novalidate>
+          <div class="form-row">
+            <div class="form-group full">
+              <label for="taskTitle">Title <span class="required">*</span></label>
+              <input type="text" id="taskTitle" class="form-input" placeholder="Task title..." maxlength="100"
+                aria-required="true" />
+              <span class="field-error" id="titleError"></span>
+              <span class="smart-hint" id="smartHint"></span>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group full">
+              <label for="taskDesc">Description</label>
+              <textarea id="taskDesc" class="form-input form-textarea" placeholder="Task description..." maxlength="500"
+                rows="3"></textarea>
+            </div>
+          </div>
+          <div class="form-row two-col">
+            <div class="form-group">
+              <label for="taskPriority">Priority <span class="required">*</span></label>
+              <select id="taskPriority" class="form-input" aria-required="true">
+                <option value="">Select priority</option>
+                <option value="high">🔥 High</option>
+                <option value="medium">⚡ Medium</option>
+                <option value="low">🌿 Low</option>
+              </select>
+              <span class="field-error" id="priorityError"></span>
+            </div>
+            <div class="form-group">
+              <label for="taskCategory">Category <span class="required">*</span></label>
+              <select id="taskCategory" class="form-input" aria-required="true">
+                <option value="">Select category</option>
+                <option value="Personal">👤 Personal</option>
+                <option value="Work">💼 Work</option>
+                <option value="Study">📚 Study</option>
+                <option value="Shopping">🛒 Shopping</option>
+                <option value="Health">💊 Health</option>
+                <option value="Custom">⚙️ Custom</option>
+              </select>
+              <span class="field-error" id="categoryError"></span>
+            </div>
+          </div>
+          <div class="form-row two-col">
+            <div class="form-group">
+              <label for="taskDueDate">Due Date <span class="required">*</span></label>
+              <input type="date" id="taskDueDate" class="form-input" aria-required="true" />
+              <span class="field-error" id="dueDateError"></span>
+            </div>
+            <div class="form-group">
+              <label for="taskDueTime">Due Time</label>
+              <input type="time" id="taskDueTime" class="form-input" />
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group full">
+              <label>Color Label</label>
+              <div class="color-picker" id="colorPicker" role="group" aria-label="Task color label">
+                <button type="button" class="color-dot active" data-color="#4F46E5" style="background: #4F46E5"
+                  aria-label="Indigo"></button>
+                <button type="button" class="color-dot" data-color="#12C6A5" style="background: #12C6A5"
+                  aria-label="Teal"></button>
+                <button type="button" class="color-dot" data-color="#fd79a8" style="background: #fd79a8"
+                  aria-label="Pink"></button>
+                <button type="button" class="color-dot" data-color="#fdcb6e" style="background: #fdcb6e"
+                  aria-label="Yellow"></button>
+                <button type="button" class="color-dot" data-color="#e17055" style="background: #e17055"
+                  aria-label="Orange"></button>
+                <button type="button" class="color-dot" data-color="#74b9ff" style="background: #74b9ff"
+                  aria-label="Blue"></button>
+                <button type="button" class="color-dot" data-color="#a29bfe" style="background: #a29bfe"
+                  aria-label="Lavender"></button>
+                <button type="button" class="color-dot" data-color="#55efc4" style="background: #55efc4"
+                  aria-label="Mint"></button>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-secondary ripple" id="cancelBtn" type="button">
+          Cancel
+        </button>
+        <button class="btn-primary ripple" id="saveTaskBtn" type="button">
+          Save Task
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== CONFIRM DELETE MODAL ========== -->
+  <div class="modal-overlay" id="confirmModal" role="dialog" aria-modal="true" aria-labelledby="confirmTitle"
+    style="display: none">
+    <div class="modal-box confirm-box">
+      <div class="modal-header">
+        <h2 class="modal-title" id="confirmTitle">Confirm Action</h2>
+        <button class="modal-close" id="confirmClose" aria-label="Close">
+          ✕
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="confirm-icon" id="confirmIcon">🗑️</div>
+        <p class="confirm-msg" id="confirmMsg">
+          Are you sure you want to delete this task? This action cannot be
+          undone.
+        </p>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-secondary ripple" id="confirmCancelBtn">
+          Cancel
+        </button>
+        <button class="btn-danger ripple" id="confirmOkBtn">Confirm</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Hidden file input for import -->
+  <input type="file" id="importFileInput" accept=".json" style="display: none" aria-hidden="true" />
+
+  <script src="script.js"></script>
+</body>
+
+</html>
